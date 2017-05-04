@@ -1,4 +1,6 @@
-package game;
+package game.utils;
+
+import game.strategy.Player;
 
 public class Launcher {
 

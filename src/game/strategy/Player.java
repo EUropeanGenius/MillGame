@@ -1,25 +1,27 @@
-package game;
+package game.strategy;
+
+import game.utils.Color;
 
 public class Player {
-	private long ram; //bytes
+//	private long ram; //bytes
 	private Color color; //enum
 	private long moveInterval; //millis
 	private static long FACTOR = 1024*1024;
 	
 	public Player(Color color, long moveInterval, long ram) {
 		super();
-		this.ram = ram;
+//		this.ram = ram;
 		this.color = color;
 		this.moveInterval = moveInterval;
 	}
 
-	public long getRam() {
-		return ram/FACTOR;
-	}
-
-	public void setRam(long ram) {
-		this.ram = ram*FACTOR;
-	}
+//	public long getRam() {
+//		return ram/FACTOR;
+//	}
+//
+//	public void setRam(long ram) {
+//		this.ram = ram*FACTOR;
+//	}
 
 	public Color getColor() {
 		return color;
@@ -55,7 +57,7 @@ public class Player {
 		int result = 1;
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + (int) (moveInterval ^ (moveInterval >>> 32));
-		result = prime * result + (int) (ram ^ (ram >>> 32));
+//		result = prime * result + (int) (ram ^ (ram >>> 32));
 		return result;
 	}
 
@@ -72,8 +74,8 @@ public class Player {
 			return false;
 		if (moveInterval != other.moveInterval)
 			return false;
-		if (ram != other.ram)
-			return false;
+//		if (ram != other.ram)
+//			return false;
 		return true;
 	}
 	 
