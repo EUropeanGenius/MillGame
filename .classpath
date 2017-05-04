@@ -2,9 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Gabriele/Documents/MillGame/libs/aima-core.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Gabriele/Documents/MillGame/libs/blackhuman.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Gabriele/Documents/MillGame/libs/engine.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Gabriele/Documents/MillGame/libs/whitehuman.jar"/>
+	<classpathentry kind="lib" path="libs/aima-core.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

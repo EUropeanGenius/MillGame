@@ -1,0 +1,86 @@
+package game;
+
+public class Player {
+	private long ram; //bytes
+	private Color color; //enum
+	private long moveInterval; //millis
+	private static long FACTOR = 1024*1024;
+	
+	public Player(Color color, long moveInterval, long ram) {
+		super();
+		this.ram = ram;
+		this.color = color;
+		this.moveInterval = moveInterval;
+	}
+
+	public long getRam() {
+		return ram/FACTOR;
+	}
+
+	public void setRam(long ram) {
+		this.ram = ram*FACTOR;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public long getMoveInterval() {
+		return moveInterval/1000;
+	}
+
+	public void setMoveInterval(long moveInterval) {
+		this.moveInterval = moveInterval*1000;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("EUropeanGenius\n");
+		sb.append("[\n");
+		sb.append("\tColor : "+ this.getColor().name()+"\n");
+		sb.append("\tTime (s): "+ this.getMoveInterval()+"\n");
+//		sb.append("\tRam (MB): "+ this.getRam()+"\n");
+		sb.append("]\n");
+		return sb.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + (int) (moveInterval ^ (moveInterval >>> 32));
+		result = prime * result + (int) (ram ^ (ram >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Player other = (Player) obj;
+		if (color != other.color)
+			return false;
+		if (moveInterval != other.moveInterval)
+			return false;
+		if (ram != other.ram)
+			return false;
+		return true;
+	}
+	 
+	
+	public void start(){
+		System.out.println(this.toString());
+	}
+	
+	
+}
