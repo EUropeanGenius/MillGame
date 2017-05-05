@@ -3,7 +3,6 @@ package game.strategy;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import game.utils.Color;
 import it.unibo.ai.didattica.mulino.domain.State;
 
 public class Player {
