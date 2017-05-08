@@ -8,7 +8,7 @@ import it.unibo.ai.didattica.mulino.actions.Action;
 import it.unibo.ai.didattica.mulino.domain.State;
 import it.unibo.ai.didattica.mulino.domain.State.Checker;
 
-public class MillGame implements Game<State, String, State.Checker>{
+public class MillGame implements Game<State, Action, State.Checker>{
 	
 	private State state;
 	
@@ -17,11 +17,14 @@ public class MillGame implements Game<State, String, State.Checker>{
 	}
 
 	@Override
-	public List<String> getActions(State currstate) {
+	public List<Action> getActions(State currstate) {
 		State.Phase fase = currstate.getCurrentPhase();
-		List<String> actions =  new ArrayList<String>();
+		List<Action> actions =  new ArrayList<Action>();
 		switch(fase.toString()){
 		case "first": break;
+		case "second": break;
+		case "final": break;
+		default: break;
 		}
 	}
 
@@ -41,7 +44,7 @@ public class MillGame implements Game<State, String, State.Checker>{
 	}
 
 	@Override
-	public State getResult(State arg0, String arg1) {
+	public State getResult(State s, Action a) {
 		// TODO Auto-generated method stub
 		return null;
 	}
