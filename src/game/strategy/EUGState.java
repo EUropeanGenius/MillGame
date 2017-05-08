@@ -13,6 +13,18 @@ public class EUGState extends State{
 		super();
 		this.currentPlayer = currentPlayer;
 	}
+	
+	public EUGState(State state, Checker currentPlayer){
+		this(currentPlayer);
+		this.getBoard().putAll(state.getBoard());
+		this.setWhiteCheckers(state.getWhiteCheckers());
+		this.setBlackCheckers(state.getBlackCheckers());
+		this.setWhiteCheckersOnBoard(state.getWhiteCheckersOnBoard());
+		this.setBlackCheckersOnBoard(state.getBlackCheckersOnBoard());
+
+		// update the phase
+		this.setCurrentPhase(state.getCurrentPhase());
+	}
 
 	public void togglePlayer(){
 		currentPlayer = (currentPlayer == State.Checker.WHITE) ? State.Checker.BLACK : State.Checker.WHITE;

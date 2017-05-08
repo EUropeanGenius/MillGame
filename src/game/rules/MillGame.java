@@ -27,14 +27,36 @@ public class MillGame implements Game<EUGState, Action, State.Checker> {
 		case "First":
 			Phase1Action action1 = new Phase1Action();
 			action1.setPutPosition(phase1Stratergy(currstate));
-			if (Util.hasCompletedTriple(currstate, action1.getPutPosition(), currstate.getCurrentPlayer())) {
+			EUGState temp1 = (EUGState)currstate.clone();
+			temp1.getBoard().put(action1.getPutPosition(), currstate.getCurrentPlayer());
+			if (Util.hasCompletedTriple(temp1, action1.getPutPosition(), currstate.getCurrentPlayer())) {
 				action1.setRemoveOpponentChecker(phase1RemoveStrategy(currstate));
 			}
 			actions.add(action1);
 			break;
 		case "Second":
+			Phase2Action action2 = new Phase2Action();
+			action2.setFrom(moveStrategy(currstate));
+			action2.setTo(phase1Stratergy(currstate));
+			EUGState temp2 = (EUGState)currstate.clone();
+			temp2.getBoard().put(action2.getFrom(), State.Checker.EMPTY);
+			temp2.getBoard().put(action2.getTo(), currstate.getCurrentPlayer());
+			if (Util.hasCompletedTriple(temp2, action2.getTo(), currstate.getCurrentPlayer())) {
+				action2.setRemoveOpponentChecker(phase1RemoveStrategy(currstate));
+			}
+			actions.add(action2);
 			break;
 		case "Final":
+			PhaseFinalAction actionf = new PhaseFinalAction();
+			actionf.setFrom(moveStrategy(currstate));
+			actionf.setTo(phase1Stratergy(currstate));
+			EUGState tempf = (EUGState)currstate.clone();
+			tempf.getBoard().put(actionf.getFrom(), State.Checker.EMPTY);
+			tempf.getBoard().put(actionf.getTo(), currstate.getCurrentPlayer());
+			if (Util.hasCompletedTriple(tempf, actionf.getTo(), currstate.getCurrentPlayer())) {
+				actionf.setRemoveOpponentChecker(phase1RemoveStrategy(currstate));
+			}
+			actions.add(actionf);
 			break;
 		default:
 			break;
@@ -136,7 +158,21 @@ public class MillGame implements Game<EUGState, Action, State.Checker> {
 				return s;
 			}
 		}
-		throw new IllegalStateException();
+		//throw new IllegalStateException();
+		return null;
+	}
+	
+	private String moveStrategy(EUGState state) {
+
+		HashMap<String, Checker> board = state.getBoard();
+
+		for (String s : board.keySet()) {
+			if (board.get(s) == state.getCurrentPlayer()) {
+				return s;
+			}
+		}
+		//throw new IllegalStateException();
+		return null;
 	}
 
 }
