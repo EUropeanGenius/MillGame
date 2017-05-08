@@ -52,6 +52,7 @@ public class Phase1 {
 			result.setCurrentPhase(State.Phase.SECOND);
 		else
 			result.setCurrentPhase(State.Phase.FIRST);
+		
 		return result;
 	}
 	
