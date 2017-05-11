@@ -84,7 +84,7 @@ public class Player {
 			}
 			
 			myTurn = false;
-			EUGState eugState = new EUGState(state,State.Checker.WHITE);
+			EUGState eugState = new EUGState(state);
 			act = computeMove(eugState);
 			System.out.println(act.toString());
 			try{
