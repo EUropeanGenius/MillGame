@@ -2,41 +2,77 @@ package game.strategy;
 
 public class EUGAction {
 
-    private String from="";
-    private String to="";
-    private String remove="";
+    private short toRow = -1;
+    private short toCol = -1;
+    private short fromRow = -1;
+    private short fromCol = -1;
+    private short removeRow = -1;
+    private short removeCol = -1;
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setTo(short row, short col){
+        this.toRow = row;
+        this.toCol = col;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setFrom(short row, short col){
+        this.fromRow = row;
+        this.fromCol = col;
     }
 
-    public void setRemove(String remove) {
-        this.remove = remove;
-    }
-
-    public String getFrom() {
-
-        return from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public String getRemove() {
-        return remove;
+    public void setRemove(short row, short col){
+        this.removeRow = row;
+        this.removeCol = col;
     }
 
     public boolean hasRemove(){
-        return !remove.equals("");
+        return (removeRow != -1 && removeCol != -1);
     }
 
-    @Override
-    public String toString() {
-        return from+to+remove;
+    public short getToRow() {
+        return toRow;
+    }
+
+    public void setToRow(short toRow) {
+        this.toRow = toRow;
+    }
+
+    public short getToCol() {
+        return toCol;
+    }
+
+    public void setToCol(short toCol) {
+        this.toCol = toCol;
+    }
+
+    public short getFromRow() {
+        return fromRow;
+    }
+
+    public void setFromRow(short fromRow) {
+        this.fromRow = fromRow;
+    }
+
+    public short getFromCol() {
+        return fromCol;
+    }
+
+    public void setFromCol(short fromCol) {
+        this.fromCol = fromCol;
+    }
+
+    public short getRemoveRow() {
+        return removeRow;
+    }
+
+    public void setRemoveRow(short removeRow) {
+        this.removeRow = removeRow;
+    }
+
+    public short getRemoveCol() {
+        return removeCol;
+    }
+
+    public void setRemoveCol(short removeCol) {
+        this.removeCol = removeCol;
     }
 }
