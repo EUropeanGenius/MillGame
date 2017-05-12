@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import com.sun.org.apache.xerces.internal.xs.StringList;
+import game.rules.Hamburger;
 import it.unibo.ai.didattica.mulino.domain.State;
 import it.unibo.ai.didattica.mulino.domain.State.Checker;
 
@@ -32,53 +33,10 @@ public class EUGState {
 
 	private short[][] board = new short[ROWS][COLUMNS];
 
-	public static final Map<String, short[]> stringToRC = new HashMap<String, short[]>() {
-		{
-			put("a1", new short[] { 0, 0 });
-			put("a4", new short[] { 1, 0 });
-			put("a7", new short[] { 2, 0 });
-			put("d7", new short[] { 3, 0 });
-			put("g7", new short[] { 4, 0 });
-			put("g4", new short[] { 5, 0 });
-			put("g1", new short[] { 6, 0 });
-			put("d1", new short[] { 7, 0 });
-
-			put("b2", new short[] { 0, 1 });
-			put("b4", new short[] { 1, 1 });
-			put("b6", new short[] { 2, 1 });
-			put("d6", new short[] { 3, 1 });
-			put("f6", new short[] { 4, 1 });
-			put("f4", new short[] { 5, 1 });
-			put("f2", new short[] { 6, 1 });
-			put("d2", new short[] { 7, 1 });
-
-			put("c3", new short[] { 0, 2 });
-			put("c4", new short[] { 1, 2 });
-			put("c5", new short[] { 2, 2 });
-			put("d5", new short[] { 3, 2 });
-			put("e5", new short[] { 4, 2 });
-			put("e4", new short[] { 5, 2 });
-			put("e3", new short[] { 6, 2 });
-			put("d3", new short[] { 7, 2 });
-		}
-	};
-
-	//TODO
-	public static final Map<String, List<short[]>> mulan = new HashMap<String, List<short[]>>() {
-		{
-			put("0,0", new ArrayList<short[]>() {
-				{
-					add(new short[] { 1, 0 });
-					add(new short[] { 2, 0 });
-				}
-			});
-		}
-	};
-
 	public EUGState(State s) {
 		Map<String, State.Checker> initialBoard = s.getBoard();
 		for (String pos : s.getPositions()) {
-			short[] rc = stringToRC.get(pos.toLowerCase());
+			short[] rc = Hamburger.stringToRC.get(pos.toLowerCase());
 			board[rc[0]][rc[1]] = EUGState.checkerToShort(initialBoard.get(pos));
 		}
 
@@ -114,6 +72,15 @@ public class EUGState {
 			return EUGState.PHASE2;
 
 		return EUGState.PHASE3;
+	}
+
+	public static State.Phase EUGPhaseToChesaniPhase(Short phase){
+		if (phase == EUGState.PHASE1)
+			return State.Phase.FIRST;
+		else if (phase == EUGState.PHASE2)
+			return State.Phase.SECOND;
+
+		return State.Phase.FINAL;
 	}
 
 	public void togglePlayer() {
@@ -205,8 +172,8 @@ public class EUGState {
 			// da controllare gli stati ripetuti
 			List<short[]> allCurrentPositions = getCurrentPlayerPositions();
 			for (short[] e : empties) {
-				List<short[]> currentAvailablePos = (actualCurrentPhase() == EUGState.PHASE2) ? 
-						currentPlayerAdiacentPositions(e[0], e[1]) : allCurrentPositions;
+				List<short[]> currentAvailablePos = (actualCurrentPhase() == EUGState.PHASE2) ?
+						Hamburger.neighbors.get(e[0]+","+e[1]) : allCurrentPositions;
 				for (short[] a : currentAvailablePos) {
 					if (doesMillPhase2(a[0], a[1], e[0], e[1])) {
 						for (short[] f : foes) {
@@ -243,19 +210,21 @@ public class EUGState {
 		return this.currentPhase;
 	}
 
+	private boolean doesMill(short row, short col) {
+		List<short[][]> availablePos = Hamburger.mulan.get(row+","+col);
+		for (short[][] av: availablePos) {
+			if(
+					board[av[0][0]][av[0][1]] == currentPlayer &&
+					board[av[1][0]][av[1][1]] == currentPlayer
+					) return true;
+		}
+		return false;
+	}
 	private boolean doesMillPhase2(short fromRow, short fromCol, short toRow, short toCol) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	private List<short[]> currentPlayerAdiacentPositions(short row, short coll) {
-		//TODO
-		return null;
-	}
-
-	private boolean doesMill(short s, short t) {
-		// TODO Auto-generated method stub
-		return false;
+		board[fromRow][fromCol] = EUGState.EMPTY;
+		boolean mill = doesMill(toRow,toCol);
+		board[fromRow][fromCol] = currentPlayer;
+		return mill;
 	}
 
 	private List<short[]> getEmptyPositions() {

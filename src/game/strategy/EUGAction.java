@@ -1,5 +1,9 @@
 package game.strategy;
 
+import it.unibo.ai.didattica.mulino.actions.Action;
+import it.unibo.ai.didattica.mulino.actions.Phase1;
+import it.unibo.ai.didattica.mulino.actions.Phase1Action;
+
 public class EUGAction {
 
     private short toRow = -1;
@@ -28,6 +32,17 @@ public class EUGAction {
         return (removeRow != -1 && removeCol != -1);
     }
 
+    public String toString(){
+        String action="";
+        if(fromRow != -1 && fromCol != -1)
+            action+=""+fromRow+fromCol;
+        if(toRow != -1 && toCol != -1)
+            action+=""+toRow+toCol;
+        if(removeRow != -1 && removeCol != -1)
+            action+=""+removeRow+removeCol;
+
+        return action;
+    }
     public short getToRow() {
         return toRow;
     }

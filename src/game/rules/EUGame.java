@@ -1,0 +1,52 @@
+package game.rules;
+
+import aima.core.search.adversarial.Game;
+import game.strategy.EUGAction;
+import game.strategy.EUGState;
+
+import java.util.List;
+
+public class EUGame implements Game<EUGState,EUGAction,Short>{
+
+    private EUGState state;
+
+    public EUGame(EUGState state) {
+        this.state = state;
+    }
+
+    @Override
+    public EUGState getInitialState() {
+        return state;
+    }
+
+    @Override
+    public Short[] getPlayers() {
+        return new Short[]{EUGState.WHITE,EUGState.BLACK};
+    }
+
+    @Override
+    public Short getPlayer(EUGState eugState) {
+        return eugState.getCurrentPlayer();
+    }
+
+    @Override
+    public List<EUGAction> getActions(EUGState eugState) {
+        return eugState.getActions();
+    }
+
+    @Override
+    public EUGState getResult(EUGState eugState, EUGAction action) {
+        return eugState.applyAction(action);
+    }
+
+    @Override
+    public boolean isTerminal(EUGState eugState) {
+        return (eugState.getBlackCheckersTable() < 3 || eugState.getWhiteCheckersTable() < 3 );
+    }
+
+    @Override
+    public double getUtility(EUGState eugState, Short i) {
+        return (eugState.getWhiteCheckersTable() > eugState.getBlackCheckersTable()) ? 1 :
+                (eugState.getBlackCheckersTable() == eugState.getWhiteCheckersTable()) ? 0 : -1;
+    }
+}

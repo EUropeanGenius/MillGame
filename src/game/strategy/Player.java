@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import aima.core.search.adversarial.AdversarialSearch;
+import aima.core.search.adversarial.AlphaBetaSearch;
+import aima.core.search.adversarial.IterativeDeepeningAlphaBetaSearch;
 import aima.core.search.adversarial.MinimaxSearch;
-import game.rules.MillGame;
+import game.rules.EUGame;
 import it.unibo.ai.didattica.mulino.actions.Action;
 import it.unibo.ai.didattica.mulino.domain.State;
 
@@ -64,7 +66,7 @@ public class Player {
 	public void start(){
 		boolean myTurn = (color == State.Checker.WHITE);
 		State state = null;
-		Action act;
+		String act;
 		
 		//read initial state
 		try{
@@ -88,7 +90,7 @@ public class Player {
 			act = computeMove(eugState);
 			System.out.println(act.toString());
 			try{
-				client.write(act);
+				client.write(act,EUGState.EUGPhaseToChesaniPhase(eugState.getCurrentPhase()));
 			}catch(Exception e){
 				e.printStackTrace();
 				return;
@@ -104,12 +106,12 @@ public class Player {
 		}
 	}
 	
-	private Action computeMove(EUGState state) {
+	private String computeMove(EUGState state) {
 		System.out.println("MINI MAX DEMO\n");
-		MillGame game = new MillGame(state);
+		EUGame game = new EUGame(state);
 		EUGState currState = game.getInitialState();
-		AdversarialSearch<EUGState, Action> search = MinimaxSearch.createFor(game);
-		return search.makeDecision(currState);		
+		AdversarialSearch<EUGState, EUGAction> search = IterativeDeepeningAlphaBetaSearch.createFor(game,-1,1,30);
+		return search.makeDecision(currState).toString();
 	}
 
 	@Override
@@ -140,8 +142,5 @@ public class Player {
 		return true;
 	}
 	 
-	
-	
-	
-	
+
 }
