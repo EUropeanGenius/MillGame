@@ -36,6 +36,37 @@ public class Hamburger {
             put("d3", new short[] { 7, 2 });
         }
     };
+    
+    public static final Map<String,String> RCToString = new HashMap<String,String>() {
+        {
+            put("00","a1");
+            put("10","a4");
+            put("20","a7");
+            put("30","d7");
+            put("40","g7");
+            put("50","g4");
+            put("60","g1");
+            put("70","d1");
+
+            put("01","b2");
+            put("11","b4");
+            put("21","b6");
+            put("31","d6");
+            put("41","f6");
+            put("51","f4");
+            put("61","f2");
+            put("71","d2");
+
+            put("02","c3");
+            put("12","c4");
+            put("22","c5");
+            put("32","d5");
+            put("42","e5");
+            put("52","e4");
+            put("62","e3");
+            put("72","d3");
+        }
+    };
 
     //TODO
     public static final Map<String, List<short[][]>> mulan = new HashMap<String, List<short[][]>>() {

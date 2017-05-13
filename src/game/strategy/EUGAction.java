@@ -1,8 +1,6 @@
 package game.strategy;
 
-import it.unibo.ai.didattica.mulino.actions.Action;
-import it.unibo.ai.didattica.mulino.actions.Phase1;
-import it.unibo.ai.didattica.mulino.actions.Phase1Action;
+import game.rules.Hamburger;
 
 public class EUGAction {
 
@@ -35,13 +33,13 @@ public class EUGAction {
     public String toString(){
         String action="";
         if(fromRow != -1 && fromCol != -1)
-            action+=""+fromRow+fromCol;
+            action+=Hamburger.RCToString.get(""+fromRow+fromCol);
         if(toRow != -1 && toCol != -1)
-            action+=""+toRow+toCol;
+            action+=Hamburger.RCToString.get(""+toRow+toCol);
         if(removeRow != -1 && removeCol != -1)
-            action+=""+removeRow+removeCol;
+            action+=Hamburger.RCToString.get(""+removeRow+removeCol);
 
-        return action;
+        return (action);
     }
     public short getToRow() {
         return toRow;

@@ -3,9 +3,7 @@ package game.strategy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import com.sun.org.apache.xerces.internal.xs.StringList;
 import game.rules.Hamburger;
 import it.unibo.ai.didattica.mulino.domain.State;
 import it.unibo.ai.didattica.mulino.domain.State.Checker;
@@ -33,7 +31,7 @@ public class EUGState {
 
 	private short[][] board = new short[ROWS][COLUMNS];
 
-	public EUGState(State s) {
+	public EUGState(State s, State.Checker color) {
 		Map<String, State.Checker> initialBoard = s.getBoard();
 		for (String pos : s.getPositions()) {
 			short[] rc = Hamburger.stringToRC.get(pos.toLowerCase());
@@ -44,7 +42,7 @@ public class EUGState {
 		whiteCheckersHand = (short) s.getWhiteCheckers();
 		blackCheckersTable = (short) s.getBlackCheckersOnBoard();
 		whiteCheckersTable = (short) s.getWhiteCheckersOnBoard();
-		currentPlayer = EUGState.WHITE;
+		currentPlayer = EUGState.checkerToShort(color);
 		currentPhase = convertPhase(s.getCurrentPhase());
 	}
 
@@ -65,7 +63,7 @@ public class EUGState {
 		return EUGState.BLACK;
 	}
 
-	public short convertPhase(State.Phase phase) {
+	public static short convertPhase(State.Phase phase) {
 		if (phase == State.Phase.FIRST)
 			return EUGState.PHASE1;
 		else if (phase == State.Phase.FIRST)
@@ -101,19 +99,19 @@ public class EUGState {
 		}
 	}
 
-	public EUGState clone(EUGState toClone) {
+	public EUGState clone() {
 		EUGState clone = new EUGState();
 		for (short row = 0; row < EUGState.ROWS; row++) {
 			for (short column = 0; column < EUGState.COLUMNS; column++) {
-				board[row][column] = toClone.getPositionChecker(row, column);
+				board[row][column] = this.getPositionChecker(row, column);
 			}
 		}
-		clone.setCurrentPlayer(toClone.getCurrentPlayer());
-		clone.setWhiteCheckersHand(toClone.getWhiteCheckersHand());
-		clone.setBlackCheckersHand(toClone.getBlackCheckersHand());
-		clone.setCurrentPhase(toClone.getCurrentPhase());
-		clone.setWhiteCheckersTable(toClone.getWhiteCheckersTable());
-		clone.setBlackCheckersTable(toClone.getBlackCheckersTable());
+		clone.setCurrentPlayer(this.getCurrentPlayer());
+		clone.setWhiteCheckersHand(this.getWhiteCheckersHand());
+		clone.setBlackCheckersHand(this.getBlackCheckersHand());
+		clone.setCurrentPhase(this.getCurrentPhase());
+		clone.setWhiteCheckersTable(this.getWhiteCheckersTable());
+		clone.setBlackCheckersTable(this.getBlackCheckersTable());
 		return clone;
 	}
 
@@ -169,7 +167,8 @@ public class EUGState {
 			break;
 		case EUGState.PHASE2 :
 		case EUGState.PHASE3 :
-			// da controllare gli stati ripetuti
+			// TODO da controllare gli stati ripetuti
+			//TODO non posso rimuovere pedine dai tris avversari
 			List<short[]> allCurrentPositions = getCurrentPlayerPositions();
 			for (short[] e : empties) {
 				List<short[]> currentAvailablePos = (actualCurrentPhase() == EUGState.PHASE2) ?
@@ -269,7 +268,7 @@ public class EUGState {
 	}
 
 	public EUGState applyAction(EUGAction action) {
-		EUGState newState = clone(this);
+		EUGState newState = this.clone();
 		if (newState.getCurrentPhase() == EUGState.PHASE1)
 			newState.addChecker(action.getToRow(), action.getToCol());
 		else

@@ -1,14 +1,8 @@
 package game.strategy;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import aima.core.search.adversarial.AdversarialSearch;
-import aima.core.search.adversarial.AlphaBetaSearch;
 import aima.core.search.adversarial.IterativeDeepeningAlphaBetaSearch;
-import aima.core.search.adversarial.MinimaxSearch;
 import game.rules.EUGame;
-import it.unibo.ai.didattica.mulino.actions.Action;
 import it.unibo.ai.didattica.mulino.domain.State;
 
 public class Player {
@@ -86,7 +80,7 @@ public class Player {
 			}
 			
 			myTurn = false;
-			EUGState eugState = new EUGState(state);
+			EUGState eugState = new EUGState(state,this.color);
 			act = computeMove(eugState);
 			System.out.println(act.toString());
 			try{
@@ -110,7 +104,7 @@ public class Player {
 		System.out.println("MINI MAX DEMO\n");
 		EUGame game = new EUGame(state);
 		EUGState currState = game.getInitialState();
-		AdversarialSearch<EUGState, EUGAction> search = IterativeDeepeningAlphaBetaSearch.createFor(game,-1,1,30);
+		AdversarialSearch<EUGState, EUGAction> search = IterativeDeepeningAlphaBetaSearch.createFor(game,-1,1,20);
 		return search.makeDecision(currState).toString();
 	}
 
