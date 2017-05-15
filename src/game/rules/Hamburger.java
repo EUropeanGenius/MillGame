@@ -68,7 +68,7 @@ public class Hamburger {
         }
     };
 
-    //TODO
+
     public static final Map<String, List<short[][]>> mulan = new HashMap<String, List<short[][]>>() {
         {
             put("0,0", new ArrayList<short[][]>() {
@@ -218,7 +218,6 @@ public class Hamburger {
         }
     };
 
-    //TODO
     public static final Map<String,List<short[]>> neighbors =  new HashMap<String, List<short[]>>() {
         {
             //angoli esterni

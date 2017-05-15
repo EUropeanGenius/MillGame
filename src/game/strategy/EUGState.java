@@ -1,6 +1,7 @@
 package game.strategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public class EUGState {
 	private short whiteCheckersHand = TOT_CHECKERS;
 	private short blackCheckersTable = 0;
 	private short whiteCheckersTable = 0;
+	private short whoAmI;
 
 	private short[][] board = new short[ROWS][COLUMNS];
 
@@ -44,6 +46,7 @@ public class EUGState {
 		whiteCheckersTable = (short) s.getWhiteCheckersOnBoard();
 		currentPlayer = EUGState.checkerToShort(color);
 		currentPhase = convertPhase(s.getCurrentPhase());
+		whoAmI = currentPlayer;
 	}
 
 	public EUGState() {
@@ -66,7 +69,7 @@ public class EUGState {
 	public static short convertPhase(State.Phase phase) {
 		if (phase == State.Phase.FIRST)
 			return EUGState.PHASE1;
-		else if (phase == State.Phase.FIRST)
+		else if (phase == State.Phase.SECOND)
 			return EUGState.PHASE2;
 
 		return EUGState.PHASE3;
@@ -112,6 +115,7 @@ public class EUGState {
 		clone.setCurrentPhase(this.getCurrentPhase());
 		clone.setWhiteCheckersTable(this.getWhiteCheckersTable());
 		clone.setBlackCheckersTable(this.getBlackCheckersTable());
+		clone.whoAmI = this.whoAmI;
 		return clone;
 	}
 
@@ -133,9 +137,9 @@ public class EUGState {
 
 	public void removeChecker(short row, short col) {
 		if (currentPlayer == EUGState.WHITE)
-			whiteCheckersTable--;
-		else
 			blackCheckersTable--;
+		else
+			whiteCheckersTable--;
 
 		board[row][col] = EUGState.EMPTY;
 	}
@@ -147,7 +151,7 @@ public class EUGState {
 		switch (currentPhase) {
 		case EUGState.PHASE1:
 			for (short[] e : empties) {
-				if (doesMill(e[0], e[1])) {
+				if (doesMill(e[0], e[1], currentPlayer)) {
 					for (short[] f : foes) {
 						actions.add(new EUGAction() {
 							{
@@ -167,8 +171,6 @@ public class EUGState {
 			break;
 		case EUGState.PHASE2 :
 		case EUGState.PHASE3 :
-			// TODO da controllare gli stati ripetuti
-			//TODO non posso rimuovere pedine dai tris avversari
 			List<short[]> allCurrentPositions = getCurrentPlayerPositions();
 			for (short[] e : empties) {
 				List<short[]> currentAvailablePos = (actualCurrentPhase() == EUGState.PHASE2) ?
@@ -209,19 +211,19 @@ public class EUGState {
 		return this.currentPhase;
 	}
 
-	private boolean doesMill(short row, short col) {
+	private boolean doesMill(short row, short col,short player) {
 		List<short[][]> availablePos = Hamburger.mulan.get(row+","+col);
 		for (short[][] av: availablePos) {
 			if(
-					board[av[0][0]][av[0][1]] == currentPlayer &&
-					board[av[1][0]][av[1][1]] == currentPlayer
+					board[av[0][0]][av[0][1]] == player &&
+					board[av[1][0]][av[1][1]] == player
 					) return true;
 		}
 		return false;
 	}
 	private boolean doesMillPhase2(short fromRow, short fromCol, short toRow, short toCol) {
 		board[fromRow][fromCol] = EUGState.EMPTY;
-		boolean mill = doesMill(toRow,toCol);
+		boolean mill = doesMill(toRow,toCol,currentPlayer);
 		board[fromRow][fromCol] = currentPlayer;
 		return mill;
 	}
@@ -238,19 +240,27 @@ public class EUGState {
 		return empties;
 	}
 
+	//return checkers that are not in a triple, unless there are only triples
+	//idea delle maschere
 	private List<short[]> getFoePositions() {
-		List<short[]> foPos = new ArrayList<short[]>();
+		boolean foeNotInTriple = false;
+		List<short[]> allPos = new ArrayList<short[]>();
+		List<short[]> notInTriplePos = new ArrayList<short[]>();
 		short foe = this.getOppositePlayer();
 		for (short row = 0; row < EUGState.ROWS; row++) {
 			for (short col = 0; col < EUGState.COLUMNS; col++) {
 				if (board[row][col] == foe) {
-					foPos.add(new short[] { row, col });
+					allPos.add(new short[] { row, col });
+					if(!doesMill(row,col,foe)) {
+						notInTriplePos.add(new short[]{row, col});
+						foeNotInTriple = true;
+					}
 				}
 			}
 		}
-		return foPos;
+		return foeNotInTriple ? notInTriplePos : allPos;
 	}
-	
+
 	private List<short[]> getCurrentPlayerPositions() {
 		List<short[]> currentPos = new ArrayList<short[]>();
 		for (short row = 0; row < EUGState.ROWS; row++) {
@@ -280,6 +290,14 @@ public class EUGState {
 		newState.togglePlayer();
 		newState.togglePhase();
 		return newState;
+	}
+
+	//todo
+	public double getUtility(){
+		double index=-1;
+		if(blackCheckersTable < whiteCheckersTable) index= 1;
+		else if(blackCheckersTable == whiteCheckersTable) index = 0;
+		return (whoAmI == EUGState.BLACK) ? index*(-1) : index;
 	}
 
 	public short getPositionChecker(short row, short column) {
@@ -336,5 +354,19 @@ public class EUGState {
 
 	public void setWhiteCheckersTable(short whiteCheckersTable) {
 		this.whiteCheckersTable = whiteCheckersTable;
+	}
+
+	@Override
+	public String toString() {
+		return "EUGState{" +
+				"currentPlayer=" + currentPlayer +
+				", currentPhase=" + currentPhase +
+				", blackCheckersHand=" + blackCheckersHand +
+				", whiteCheckersHand=" + whiteCheckersHand +
+				", blackCheckersTable=" + blackCheckersTable +
+				", whiteCheckersTable=" + whiteCheckersTable +
+				", whoAmI=" + whoAmI +
+				", board=" + Arrays.toString(board) +
+				'}';
 	}
 }

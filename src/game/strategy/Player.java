@@ -2,6 +2,7 @@ package game.strategy;
 
 import aima.core.search.adversarial.AdversarialSearch;
 import aima.core.search.adversarial.IterativeDeepeningAlphaBetaSearch;
+import game.rules.EUGHeuristic;
 import game.rules.EUGame;
 import it.unibo.ai.didattica.mulino.domain.State;
 
@@ -84,6 +85,7 @@ public class Player {
 			act = computeMove(eugState);
 			System.out.println(act.toString());
 			try{
+				System.out.println(EUGState.EUGPhaseToChesaniPhase(eugState.getCurrentPhase()));
 				client.write(act,EUGState.EUGPhaseToChesaniPhase(eugState.getCurrentPhase()));
 			}catch(Exception e){
 				e.printStackTrace();
@@ -104,7 +106,8 @@ public class Player {
 		System.out.println("MINI MAX DEMO\n");
 		EUGame game = new EUGame(state);
 		EUGState currState = game.getInitialState();
-		AdversarialSearch<EUGState, EUGAction> search = IterativeDeepeningAlphaBetaSearch.createFor(game,-1,1,20);
+		EUGHeuristic<EUGState, EUGAction, Short> search = EUGHeuristic.createFor(game,-1,1,20);
+		search.setLogEnabled(true);
 		return search.makeDecision(currState).toString();
 	}
 

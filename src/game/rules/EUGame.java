@@ -41,12 +41,13 @@ public class EUGame implements Game<EUGState,EUGAction,Short>{
 
     @Override
     public boolean isTerminal(EUGState eugState) {
-        return (eugState.getBlackCheckersTable() < 3 || eugState.getWhiteCheckersTable() < 3 );
+        return (eugState.getCurrentPhase() == EUGState.PHASE3 && (eugState.getBlackCheckersTable() < 3 || eugState.getWhiteCheckersTable() < 3 ));
     }
 
+    //TODO non siamo sempre i bianchi -> tornare 1 quando vince il giocatore corrente
+    //non è l'euristica, quella va fatta estendendo l'algoritmo metodo eval.
     @Override
     public double getUtility(EUGState eugState, Short i) {
-        return (eugState.getWhiteCheckersTable() > eugState.getBlackCheckersTable()) ? 1 :
-                (eugState.getBlackCheckersTable() == eugState.getWhiteCheckersTable()) ? 0 : -1;
+       return eugState.getUtility();
     }
 }
