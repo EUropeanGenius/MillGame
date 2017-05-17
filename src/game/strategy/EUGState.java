@@ -312,28 +312,32 @@ public class EUGState {
 	//todo
 	public double getUtility(){
 		double index=0;
-		double black = (whoAmI == EUGState.BLACK) ? -1 : 1;
 		if(!(this.getCurrentPhase() == EUGState.PHASE1)) {
-			if (blackCheckersTable == 2) index = 1.0*black;
-			else if (whiteCheckersTable == 2) index = -1.0*black;
+			if (this.getCheckersTable(this.notMe()) == 2)  return 1.0;
+			else if (this.getCheckersTable(whoAmI) == 2) return -1.0;
 		}
 		else{
 			if(this.whiteCheckersTable == 0 || this.blackCheckersTable == 0) return 0;
 		}
 		//strategy
 		{
-			if(this.whiteCheckersTable/(TOT_CHECKERS-this.whiteCheckersHand) > this.blackCheckersTable/(TOT_CHECKERS-this.blackCheckersHand))
-				index +=0.3*black;
-			else index -=0.3*black;
+			if(this.getCheckersTable(whoAmI)/(TOT_CHECKERS-this.getCheckersHand(whoAmI)) >
+					this.getCheckersTable(this.notMe())/(TOT_CHECKERS-this.getCheckersHand(this.notMe())))
+				index +=0.3;
+			else index -=0.3;
 
-			if(numberOfMills(EUGState.WHITE) > numberOfMills(EUGState.BLACK)) index+=0.4*black;
-			else index-=0.4*black;
+			if(numberOfMills(whoAmI) > numberOfMills(this.notMe())) index+=0.4;
+			else index-=0.4;
 
-			if(numberOfCouples(EUGState.WHITE) > numberOfCouples(EUGState.BLACK)) index+=0.17*black;
-			else index-=0.17*black;
+			if(numberOfOpenCouples(whoAmI) > numberOfOpenCouples(this.notMe())) index+=0.19;
+			else index-=0.19;
 
 		}
 		return index;
+	}
+
+	private short notMe(){
+		return (whoAmI == EUGState.WHITE) ? EUGState.BLACK : EUGState.WHITE;
 	}
 
 	private short numberOfMills(short color){
@@ -357,6 +361,25 @@ public class EUGState {
 				couples++;
 		}
 		return couples;
+	}
+
+	private short numberOfOpenCouples(short color){
+		short couples=0;
+		for (short[][] mill : Hamburger.mills) {
+			if((this.board[mill[0][0]][mill[0][1]] == color && this.board[mill[1][0]][mill[1][1]] == color && this.board[mill[2][0]][mill[2][1]] == EUGState.EMPTY) ||
+					(this.board[mill[0][0]][mill[0][1]] == color && this.board[mill[1][0]][mill[1][1]] == EUGState.EMPTY && this.board[mill[2][0]][mill[2][1]] == color) ||
+					(this.board[mill[0][0]][mill[0][1]] == EUGState.EMPTY && this.board[mill[1][0]][mill[1][1]] == color && this.board[mill[2][0]][mill[2][1]] == color))
+				couples++;
+		}
+		return couples;
+	}
+
+	private short getCheckersTable(short color){
+		return (color == EUGState.WHITE) ? this.whiteCheckersTable : this.blackCheckersTable;
+	}
+
+	private short getCheckersHand(short color){
+		return (color == EUGState.WHITE) ? this.whiteCheckersHand : this.blackCheckersHand;
 	}
 
 	public short getPositionChecker(short row, short column) {
