@@ -92,7 +92,7 @@ public class EUGState {
 	public void togglePhase() {
 		switch (currentPhase) {
 		case EUGState.PHASE1:
-			currentPhase = (whiteCheckersHand | blackCheckersHand) == 0 ? EUGState.PHASE2 : currentPhase;
+			currentPhase = (whiteCheckersHand ==0 && blackCheckersHand == 0) ? EUGState.PHASE2 : currentPhase;
 			break;
 		case EUGState.PHASE2:
 			currentPhase = (whiteCheckersTable == 3 || blackCheckersTable == 3) ? EUGState.PHASE3 : currentPhase;
@@ -106,7 +106,7 @@ public class EUGState {
 		EUGState clone = new EUGState();
 		for (short row = 0; row < EUGState.ROWS; row++) {
 			for (short column = 0; column < EUGState.COLUMNS; column++) {
-				board[row][column] = this.getPositionChecker(row, column);
+				clone.board[row][column] = this.getPositionChecker(row, column);
 			}
 		}
 		clone.setCurrentPlayer(this.getCurrentPlayer());
@@ -171,10 +171,17 @@ public class EUGState {
 			break;
 		case EUGState.PHASE2 :
 		case EUGState.PHASE3 :
-			List<short[]> allCurrentPositions = getCurrentPlayerPositions();
+			List<short[]> allCurrentPositions = this.getCurrentPlayerPositions();
 			for (short[] e : empties) {
 				List<short[]> currentAvailablePos = (actualCurrentPhase() == EUGState.PHASE2) ?
-						Hamburger.neighbors.get(e[0]+","+e[1]) : allCurrentPositions;
+						this.getCurrentPlayerAdiacentPositions(e[0],e[1]) : allCurrentPositions;
+				//TODO sbagliato, non voglio tutti i neighbors ma solo quelli che sono occupati da mie pedine
+
+//				for (short[] k : empties) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
+//				for (short[] k : currentAvailablePos) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
+//				for (short[] k : foes) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
+				//System.out.println(this.toString());
+
 				for (short[] a : currentAvailablePos) {
 					if (doesMillPhase2(a[0], a[1], e[0], e[1])) {
 						for (short[] f : foes) {
@@ -273,6 +280,16 @@ public class EUGState {
 		return currentPos;
 	}
 
+	private List<short[]> getCurrentPlayerAdiacentPositions(short row,short col){
+		List<short[]> adiacentPos = new ArrayList<short[]>();
+		for(short[] pos : Hamburger.neighbors.get(row+","+col)){
+			if (board[pos[0]][pos[1]] == this.currentPlayer) {
+				adiacentPos.add(new short[] { pos[0], pos[1] });
+			}
+		}
+		return adiacentPos;
+	}
+
 	private short getOppositePlayer() {
 		return (currentPlayer == EUGState.WHITE) ? EUGState.BLACK : EUGState.WHITE;
 	}
@@ -294,10 +311,52 @@ public class EUGState {
 
 	//todo
 	public double getUtility(){
-		double index=-1;
-		if(blackCheckersTable < whiteCheckersTable) index= 1;
-		else if(blackCheckersTable == whiteCheckersTable) index = 0;
-		return (whoAmI == EUGState.BLACK) ? index*(-1) : index;
+		double index=0;
+		double black = (whoAmI == EUGState.BLACK) ? -1 : 1;
+		if(!(this.getCurrentPhase() == EUGState.PHASE1)) {
+			if (blackCheckersTable == 2) index = 1.0*black;
+			else if (whiteCheckersTable == 2) index = -1.0*black;
+		}
+		else{
+			if(this.whiteCheckersTable == 0 || this.blackCheckersTable == 0) return 0;
+		}
+		//strategy
+		{
+			if(this.whiteCheckersTable/(TOT_CHECKERS-this.whiteCheckersHand) > this.blackCheckersTable/(TOT_CHECKERS-this.blackCheckersHand))
+				index +=0.3*black;
+			else index -=0.3*black;
+
+			if(numberOfMills(EUGState.WHITE) > numberOfMills(EUGState.BLACK)) index+=0.4*black;
+			else index-=0.4*black;
+
+			if(numberOfCouples(EUGState.WHITE) > numberOfCouples(EUGState.BLACK)) index+=0.17*black;
+			else index-=0.17*black;
+
+		}
+		return index;
+	}
+
+	private short numberOfMills(short color){
+		short mills=0;
+		for (short[][] mill : Hamburger.mills) {
+			if(this.board[mill[0][0]][mill[0][1]] == color &&
+					this.board[mill[1][0]][mill[1][1]] == color &&
+					this.board[mill[2][0]][mill[2][1]] == color)
+				mills++;
+		}
+		return mills;
+	}
+
+	private short numberOfCouples(short color){
+		short couples=0,k=0;
+		for (short[][] mill : Hamburger.mills) {
+			for (int i = 0; i<3; i++)
+				if(this.board[mill[i][0]][mill[i][1]] == color) k++;
+
+			if(k == 2)
+				couples++;
+		}
+		return couples;
 	}
 
 	public short getPositionChecker(short row, short column) {

@@ -68,6 +68,30 @@ public class Hamburger {
         }
     };
 
+    public static final List<short[][]> mills = new ArrayList<short[][]>() {
+        {
+            add(new short[][]{{0, 0}, {1, 0}, {2, 0}});
+            add(new short[][]{{0, 1}, {1, 1}, {2, 1}});
+            add(new short[][]{{0, 2}, {1, 2}, {2, 2}});
+
+            add(new short[][]{{2, 0}, {3, 0}, {4, 0}});
+            add(new short[][]{{2, 1}, {3, 1}, {4, 1}});
+            add(new short[][]{{2, 2}, {3, 2}, {4, 2}});
+
+            add(new short[][]{{4, 0}, {5, 0}, {6, 0}});
+            add(new short[][]{{4, 1}, {5, 1}, {6, 1}});
+            add(new short[][]{{4, 2}, {5, 2}, {6, 2}});
+
+            add(new short[][]{{6, 0}, {7, 0}, {0, 0}});
+            add(new short[][]{{6, 1}, {7, 1}, {0, 1}});
+            add(new short[][]{{6, 2}, {7, 2}, {0, 2}});
+
+            add(new short[][]{{1, 0}, {1, 1}, {1, 2}});
+            add(new short[][]{{3, 0}, {3, 1}, {3, 2}});
+            add(new short[][]{{5, 0}, {5, 1}, {5, 2}});
+            add(new short[][]{{7, 0}, {7, 1}, {7, 2}});
+        }
+    };
 
     public static final Map<String, List<short[][]>> mulan = new HashMap<String, List<short[][]>>() {
         {
