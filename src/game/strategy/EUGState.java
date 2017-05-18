@@ -349,8 +349,8 @@ public class EUGState {
 
 				index += myMills*25;
 				index -= foeMills*30;
-				index += (myCouples-myMills)*15*(this.getCheckersHand(whoAmI)+1)/3;
-				index -= (foeCouples-foeMills)*18*(this.getCheckersHand(this.notMe())+1)/3;
+				index += (myCouples-myMills)*5;
+				index -= (foeCouples-foeMills)*6;
 				break;
 		}
 
