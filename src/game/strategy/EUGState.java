@@ -312,8 +312,8 @@ public class EUGState {
 	public short getUtility(){
 		short index=0;
 		if(!(this.getCurrentPhase() == EUGState.PHASE1)) {
-			if (this.getCheckersTable(this.notMe()) == 2)  return 30000;
-			else if (this.getCheckersTable(whoAmI) == 2) return -30000;
+			if (this.getCheckersTable(this.notMe()) == 2)  return 3000;
+			else if (this.getCheckersTable(whoAmI) == 2) return -3000;
 		}
 		else{
 			if(this.whiteCheckersTable == 0 || this.blackCheckersTable == 0) return 0;
@@ -334,23 +334,23 @@ public class EUGState {
 				short foeCheckersShouldTable =((short)(TOT_CHECKERS - this.getCheckersHand(this.notMe())));
 
 				if((myCheckersTable/myCheckersShouldTable) > (foeCheckersTable/foeCheckersShouldTable))
-					index +=300;
-				else index -=300;
+					index +=30;
+				else index -=30;
 
-				index += myMills*200*(TOT_CHECKERS - this.getCheckersHand(whoAmI));
-				index -= foeMills*250*(TOT_CHECKERS - this.getCheckersHand(this.notMe()));
-				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1);
-				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1);
+				index += myMills*20*(TOT_CHECKERS - this.getCheckersHand(whoAmI))/3;
+				index -= foeMills*25*(TOT_CHECKERS - this.getCheckersHand(this.notMe()))/3;
+				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1)/3;
+				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1)/3;
 				break;
 			case EUGState.PHASE2:
 			case EUGState.PHASE3:
-				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=350;
-				else index -=350;
+				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=35;
+				else index -=35;
 
-				index += myMills*250*(TOT_CHECKERS - this.getCheckersHand(whoAmI));
-				index -= foeMills*300*(TOT_CHECKERS - this.getCheckersHand(this.notMe()));
-				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1);
-				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1);
+				index += myMills*25;
+				index -= foeMills*30;
+				index += (myCouples-myMills)*15*(this.getCheckersHand(whoAmI)+1)/3;
+				index -= (foeCouples-foeMills)*18*(this.getCheckersHand(this.notMe())+1)/3;
 				break;
 		}
 
