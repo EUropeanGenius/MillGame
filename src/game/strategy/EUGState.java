@@ -319,20 +319,60 @@ public class EUGState {
 		else{
 			if(this.whiteCheckersTable == 0 || this.blackCheckersTable == 0) return 0;
 		}
-		//strategy
-		{
-			if(this.getCheckersTable(whoAmI)/(TOT_CHECKERS-this.getCheckersHand(whoAmI)) >
-					this.getCheckersTable(this.notMe())/(TOT_CHECKERS-this.getCheckersHand(this.notMe())))
-				index +=0.3;
-			else index -=0.3;
 
-			if(numberOfMills(whoAmI) > numberOfMills(this.notMe())) index+=0.4;
-			else index-=0.4;
+		short myCheckersTable = this.getCheckersTable(whoAmI);
+		short foeCheckersTable = this.getCheckersTable(this.notMe());
+		short myMills = this.numberOfMills(whoAmI);
+		short foeMills = this.numberOfMills(this.notMe());
+		short myCouples = this.numberOfOpenCouples(whoAmI);
+		short foeCouples = this.numberOfOpenCouples(this.notMe());
 
-			if(numberOfOpenCouples(whoAmI) > numberOfOpenCouples(this.notMe())) index+=0.19;
-			else index-=0.19;
+		switch(this.currentPhase){
+			case EUGState.PHASE1:
+				short myCheckersShouldTable = ((short)(TOT_CHECKERS - this.getCheckersHand(whoAmI)));
+				short foeCheckersShouldTable =((short)(TOT_CHECKERS - this.getCheckersHand(this.notMe())));
+				if((myCheckersTable/myCheckersShouldTable) > (foeCheckersTable/foeCheckersShouldTable))
+					index +=0.3;
+				else index -=0.3;
 
+				index += myMills*0.1;
+				index -= foeMills*0.1;
+				index += myCouples*0.04;
+				index -= foeCouples*0.04;
+				break;
+			case EUGState.PHASE2:
+				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=0.35;
+				else index -=0.35;
+
+				index += myMills*0.1;
+				index -= foeMills*0.1;
+				index += myCouples*0.04;
+				index -= foeCouples*0.04;
+				break;
+			case EUGState.PHASE3:
+				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=0.205;
+				else index -=0.205;
+
+				index += myMills*0.1;
+				index -= foeMills*0.1;
+				index += myCouples*0.04;
+				index -= foeCouples*0.04;
+				break;
 		}
+		//strategy
+//		{
+//			if(this.getCheckersTable(whoAmI)/(TOT_CHECKERS-this.getCheckersHand(whoAmI)) >
+//					this.getCheckersTable(this.notMe())/(TOT_CHECKERS-this.getCheckersHand(this.notMe())))
+//				index +=0.3;
+//			else index -=0.3;
+//
+//			if(numberOfMills(whoAmI) > numberOfMills(this.notMe())) index+=0.4;
+//			else index-=0.4;
+//
+//			if(numberOfOpenCouples(whoAmI) > numberOfOpenCouples(this.notMe())) index+=0.19;
+//			else index-=0.19;
+//
+//		}
 		return index;
 	}
 
