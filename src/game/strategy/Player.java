@@ -104,7 +104,7 @@ public class Player {
 	private String computeMove(EUGState state) {
 		EUGame game = new EUGame(state);
 		EUGState currState = game.getInitialState();
-		EUGHeuristic<EUGState, EUGAction, Short> search = EUGHeuristic.createFor(game,-1,1,58);
+		EUGHeuristic<EUGState, EUGAction, Short> search = EUGHeuristic.createFor(game,-100,100,58);
 		//search.setLogEnabled(true);
 		return search.makeDecision(currState).toString();
 	}

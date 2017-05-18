@@ -313,8 +313,8 @@ public class EUGState {
 	public double getUtility(){
 		double index=0;
 		if(!(this.getCurrentPhase() == EUGState.PHASE1)) {
-			if (this.getCheckersTable(this.notMe()) == 2)  return 1.0;
-			else if (this.getCheckersTable(whoAmI) == 2) return -1.0;
+			if (this.getCheckersTable(this.notMe()) == 2)  return 100.0;
+			else if (this.getCheckersTable(whoAmI) == 2) return -100.0;
 		}
 		else{
 			if(this.whiteCheckersTable == 0 || this.blackCheckersTable == 0) return 0;
@@ -324,6 +324,8 @@ public class EUGState {
 		short foeCheckersTable = this.getCheckersTable(this.notMe());
 		short myMills = this.numberOfMills(whoAmI);
 		short foeMills = this.numberOfMills(this.notMe());
+//		short myOpenCouples = this.numberOfOpenCouples(whoAmI);
+//		short foeOpenCouples = this.numberOfOpenCouples(this.notMe());
 		short myCouples = this.numberOfOpenCouples(whoAmI);
 		short foeCouples = this.numberOfOpenCouples(this.notMe());
 
@@ -331,34 +333,28 @@ public class EUGState {
 			case EUGState.PHASE1:
 				short myCheckersShouldTable = ((short)(TOT_CHECKERS - this.getCheckersHand(whoAmI)));
 				short foeCheckersShouldTable =((short)(TOT_CHECKERS - this.getCheckersHand(this.notMe())));
+
 				if((myCheckersTable/myCheckersShouldTable) > (foeCheckersTable/foeCheckersShouldTable))
 					index +=0.3;
 				else index -=0.3;
 
-				index += myMills*0.1;
-				index -= foeMills*0.1;
-				index += myCouples*0.04;
-				index -= foeCouples*0.04;
+				index += myMills*0.2;
+				index -= foeMills*0.25;
+				index += (myCouples-myMills)*0.15;
+				index -= (foeCouples-foeMills)*0.18;
 				break;
 			case EUGState.PHASE2:
+			case EUGState.PHASE3:
 				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=0.35;
 				else index -=0.35;
 
-				index += myMills*0.1;
-				index -= foeMills*0.1;
-				index += myCouples*0.04;
-				index -= foeCouples*0.04;
-				break;
-			case EUGState.PHASE3:
-				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=0.205;
-				else index -=0.205;
-
-				index += myMills*0.1;
-				index -= foeMills*0.1;
-				index += myCouples*0.04;
-				index -= foeCouples*0.04;
+				index += myMills*0.25;
+				index -= foeMills*0.3;
+				index += (myCouples-myMills)*0.15;
+				index -= (foeCouples-foeMills)*0.18;
 				break;
 		}
+
 		//strategy
 //		{
 //			if(this.getCheckersTable(whoAmI)/(TOT_CHECKERS-this.getCheckersHand(whoAmI)) >
