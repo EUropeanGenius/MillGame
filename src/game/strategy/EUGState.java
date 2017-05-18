@@ -309,12 +309,11 @@ public class EUGState {
 		return newState;
 	}
 
-	//todo
-	public double getUtility(){
-		double index=0;
+	public short getUtility(){
+		short index=0;
 		if(!(this.getCurrentPhase() == EUGState.PHASE1)) {
-			if (this.getCheckersTable(this.notMe()) == 2)  return 100.0;
-			else if (this.getCheckersTable(whoAmI) == 2) return -100.0;
+			if (this.getCheckersTable(this.notMe()) == 2)  return 30000;
+			else if (this.getCheckersTable(whoAmI) == 2) return -30000;
 		}
 		else{
 			if(this.whiteCheckersTable == 0 || this.blackCheckersTable == 0) return 0;
@@ -335,40 +334,26 @@ public class EUGState {
 				short foeCheckersShouldTable =((short)(TOT_CHECKERS - this.getCheckersHand(this.notMe())));
 
 				if((myCheckersTable/myCheckersShouldTable) > (foeCheckersTable/foeCheckersShouldTable))
-					index +=0.3;
-				else index -=0.3;
+					index +=300;
+				else index -=300;
 
-				index += myMills*0.2;
-				index -= foeMills*0.25;
-				index += (myCouples-myMills)*0.15;
-				index -= (foeCouples-foeMills)*0.18;
+				index += myMills*200*(TOT_CHECKERS - this.getCheckersHand(whoAmI));
+				index -= foeMills*250*(TOT_CHECKERS - this.getCheckersHand(this.notMe()));
+				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1);
+				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1);
 				break;
 			case EUGState.PHASE2:
 			case EUGState.PHASE3:
-				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=0.35;
-				else index -=0.35;
+				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=350;
+				else index -=350;
 
-				index += myMills*0.25;
-				index -= foeMills*0.3;
-				index += (myCouples-myMills)*0.15;
-				index -= (foeCouples-foeMills)*0.18;
+				index += myMills*250*(TOT_CHECKERS - this.getCheckersHand(whoAmI));
+				index -= foeMills*300*(TOT_CHECKERS - this.getCheckersHand(this.notMe()));
+				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1);
+				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1);
 				break;
 		}
 
-		//strategy
-//		{
-//			if(this.getCheckersTable(whoAmI)/(TOT_CHECKERS-this.getCheckersHand(whoAmI)) >
-//					this.getCheckersTable(this.notMe())/(TOT_CHECKERS-this.getCheckersHand(this.notMe())))
-//				index +=0.3;
-//			else index -=0.3;
-//
-//			if(numberOfMills(whoAmI) > numberOfMills(this.notMe())) index+=0.4;
-//			else index-=0.4;
-//
-//			if(numberOfOpenCouples(whoAmI) > numberOfOpenCouples(this.notMe())) index+=0.19;
-//			else index-=0.19;
-//
-//		}
 		return index;
 	}
 
