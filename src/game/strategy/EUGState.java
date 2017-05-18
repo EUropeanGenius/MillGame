@@ -334,35 +334,29 @@ public class EUGState {
 				if((myCheckersTable/myCheckersShouldTable) > (foeCheckersTable/foeCheckersShouldTable))
 					index +=0.3;
 				else index -=0.3;
-
-				index += myMills*0.1;
-				index -= foeMills*0.1;
-				index += myCouples*0.04;
-				index -= foeCouples*0.04;
+				
+				if(myMills > foeMills) index +=0.4;
+				else index-=0.4;
+				if(myCouples > foeCouples) index+=0.19;
+				else index-=0.19;
+				
 				break;
 			case EUGState.PHASE2:
+			case EUGState.PHASE3:
 				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=0.35;
 				else index -=0.35;
-
-				index += myMills*0.1;
-				index -= foeMills*0.1;
-				index += myCouples*0.04;
-				index -= foeCouples*0.04;
-				break;
-			case EUGState.PHASE3:
-				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=0.205;
-				else index -=0.205;
-
-				index += myMills*0.1;
-				index -= foeMills*0.1;
-				index += myCouples*0.04;
-				index -= foeCouples*0.04;
+				
+				if(myMills > foeMills) index +=0.4;
+				else index-=0.4;
+				if(myCouples > foeCouples) index+=0.15;
+				else index-=0.15;
+				
 				break;
 		}
 		//strategy
 //		{
-//			if(this.getCheckersTable(whoAmI)/(TOT_CHECKERS-this.getCheckersHand(whoAmI)) >
-//					this.getCheckersTable(this.notMe())/(TOT_CHECKERS-this.getCheckersHand(this.notMe())))
+//			if(this.getCheckersTable(whoAmI)/myCheckersShouldTable >
+//					this.getCheckersTable(this.notMe())/foeCheckersShouldTable)
 //				index +=0.3;
 //			else index -=0.3;
 //
