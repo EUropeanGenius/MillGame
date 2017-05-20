@@ -327,7 +327,10 @@ public class EUGState {
 //		short foeOpenCouples = this.numberOfOpenCouples(this.notMe());
 		short myCouples = this.numberOfOpenCouples(whoAmI);
 		short foeCouples = this.numberOfOpenCouples(this.notMe());
-
+//		short myDegree = this.degreesOfFreedom(whoAmI);
+//		short foeDegree = this.degreesOfFreedom(this.notMe());
+		
+	
 		switch(this.currentPhase){
 			case EUGState.PHASE1:
 				short myCheckersShouldTable = ((short)(TOT_CHECKERS - this.getCheckersHand(whoAmI)));
@@ -341,16 +344,18 @@ public class EUGState {
 				index -= foeMills*25*(TOT_CHECKERS - this.getCheckersHand(this.notMe()))/3;
 				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1)/3;
 				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1)/3;
+				//index += (myDegree-foeDegree-1)*(TOT_CHECKERS-this.getCheckersHand(whoAmI));
 				break;
 			case EUGState.PHASE2:
 			case EUGState.PHASE3:
 				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=35;
 				else index -=35;
 
-				index += myMills*25;
-				index -= foeMills*30;
-				index += (myCouples-myMills)*5;
-				index -= (foeCouples-foeMills)*6;
+				index += myMills*25*TOT_CHECKERS/3;
+				index -= foeMills*30*TOT_CHECKERS/3;
+				index += (myCouples-myMills)*5/3;
+				index -= (foeCouples-foeMills)*6/3;
+				//index += (myDegree-foeDegree-1)*TOT_CHECKERS;
 				break;
 		}
 
@@ -370,6 +375,20 @@ public class EUGState {
 				mills++;
 		}
 		return mills;
+	}
+	
+	private short degreesOfFreedom(short color){
+		short degrees = 0;
+		for (short row = 0; row < EUGState.ROWS; row++) {
+			for (short col = 0; col < EUGState.COLUMNS; col++) {
+				if(board[row][col] == color) continue;
+				for(short[] neighbor : Hamburger.neighbors.get(row+","+col)){
+					if(board[neighbor[0]][neighbor[1]] == EUGState.EMPTY)
+						degrees++;
+				}
+			}
+		}
+		return degrees;
 	}
 
 	private short numberOfCouples(short color){
