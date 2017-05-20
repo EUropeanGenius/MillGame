@@ -175,12 +175,6 @@ public class EUGState {
 			for (short[] e : empties) {
 				List<short[]> currentAvailablePos = (actualCurrentPhase() == EUGState.PHASE2) ?
 						this.getCurrentPlayerAdiacentPositions(e[0],e[1]) : allCurrentPositions;
-				//TODO sbagliato, non voglio tutti i neighbors ma solo quelli che sono occupati da mie pedine
-
-//				for (short[] k : empties) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
-//				for (short[] k : currentAvailablePos) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
-//				for (short[] k : foes) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
-				//System.out.println(this.toString());
 
 				for (short[] a : currentAvailablePos) {
 					if (doesMillPhase2(a[0], a[1], e[0], e[1])) {
@@ -213,6 +207,7 @@ public class EUGState {
 		if (this.currentPhase == EUGState.PHASE3) {
 			if (currentPlayer == EUGState.WHITE)
 				return (whiteCheckersTable > 3) ? EUGState.PHASE2 : EUGState.PHASE3;
+			
 			return (blackCheckersTable > 3) ? EUGState.PHASE2 : EUGState.PHASE3;
 		}
 		return this.currentPhase;
@@ -327,10 +322,10 @@ public class EUGState {
 //		short foeOpenCouples = this.numberOfOpenCouples(this.notMe());
 		short myCouples = this.numberOfOpenCouples(whoAmI);
 		short foeCouples = this.numberOfOpenCouples(this.notMe());
-//		short myDegree = this.degreesOfFreedom(whoAmI);
-//		short foeDegree = this.degreesOfFreedom(this.notMe());
+		short myDegree = this.degreesOfFreedom(whoAmI);
+		short foeDegree = this.degreesOfFreedom(this.notMe());
 		
-	
+//		System.out.println(myDegree + " " + foeDegree);
 		switch(this.currentPhase){
 			case EUGState.PHASE1:
 				short myCheckersShouldTable = ((short)(TOT_CHECKERS - this.getCheckersHand(whoAmI)));
@@ -355,7 +350,7 @@ public class EUGState {
 				index -= foeMills*30*TOT_CHECKERS/3;
 				index += (myCouples-myMills)*5/3;
 				index -= (foeCouples-foeMills)*6/3;
-				//index += (myDegree-foeDegree-1)*TOT_CHECKERS;
+				//index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(this.notMe())-this.getCheckersTable(whoAmI)));
 				break;
 		}
 
@@ -381,7 +376,7 @@ public class EUGState {
 		short degrees = 0;
 		for (short row = 0; row < EUGState.ROWS; row++) {
 			for (short col = 0; col < EUGState.COLUMNS; col++) {
-				if(board[row][col] == color) continue;
+				if(board[row][col] != color) continue;
 				for(short[] neighbor : Hamburger.neighbors.get(row+","+col)){
 					if(board[neighbor[0]][neighbor[1]] == EUGState.EMPTY)
 						degrees++;
