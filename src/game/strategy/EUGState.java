@@ -339,7 +339,7 @@ public class EUGState {
 				index -= foeMills*25*(TOT_CHECKERS - this.getCheckersHand(this.notMe()))/3;
 				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1)/3;
 				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1)/3;
-				//index += (myDegree-foeDegree-1)*(TOT_CHECKERS-this.getCheckersHand(whoAmI));
+				index += (myDegree-foeDegree-1)*(TOT_CHECKERS-this.getCheckersHand(whoAmI));
 				break;
 			case EUGState.PHASE2:
 			case EUGState.PHASE3:
@@ -350,7 +350,7 @@ public class EUGState {
 				index -= foeMills*30*TOT_CHECKERS/3;
 				index += (myCouples-myMills)*5/3;
 				index -= (foeCouples-foeMills)*6/3;
-				//index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(this.notMe())-this.getCheckersTable(whoAmI)));
+				index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(this.notMe())-this.getCheckersTable(whoAmI)));
 				break;
 		}
 
