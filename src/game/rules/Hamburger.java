@@ -407,7 +407,7 @@ public class Hamburger {
                     add(new short[] {6,1});
                     add(new short[] {0,1});
                     add(new short[] {7,0});
-                    add(new short[] {1,2});
+                    add(new short[] {7,2});
                 }
             });
         }

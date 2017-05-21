@@ -175,12 +175,6 @@ public class EUGState {
 			for (short[] e : empties) {
 				List<short[]> currentAvailablePos = (actualCurrentPhase() == EUGState.PHASE2) ?
 						this.getCurrentPlayerAdiacentPositions(e[0],e[1]) : allCurrentPositions;
-				//TODO sbagliato, non voglio tutti i neighbors ma solo quelli che sono occupati da mie pedine
-
-//				for (short[] k : empties) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
-//				for (short[] k : currentAvailablePos) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
-//				for (short[] k : foes) {	System.out.print(k[0]+ ","+k[1]+" -- ");} System.out.println();
-				//System.out.println(this.toString());
 
 				for (short[] a : currentAvailablePos) {
 					if (doesMillPhase2(a[0], a[1], e[0], e[1])) {
@@ -213,6 +207,7 @@ public class EUGState {
 		if (this.currentPhase == EUGState.PHASE3) {
 			if (currentPlayer == EUGState.WHITE)
 				return (whiteCheckersTable > 3) ? EUGState.PHASE2 : EUGState.PHASE3;
+			
 			return (blackCheckersTable > 3) ? EUGState.PHASE2 : EUGState.PHASE3;
 		}
 		return this.currentPhase;
@@ -309,31 +304,61 @@ public class EUGState {
 		return newState;
 	}
 
-	//todo
-	public double getUtility(){
-		double index=0;
-		double black = (whoAmI == EUGState.BLACK) ? -1 : 1;
+	public short getUtility(){
+		short index=0;
 		if(!(this.getCurrentPhase() == EUGState.PHASE1)) {
-			if (blackCheckersTable == 2) index = 1.0*black;
-			else if (whiteCheckersTable == 2) index = -1.0*black;
+			if (this.getCheckersTable(this.notMe()) == 2)  return 3000;
+			else if (this.getCheckersTable(whoAmI) == 2) return -3000;
 		}
 		else{
 			if(this.whiteCheckersTable == 0 || this.blackCheckersTable == 0) return 0;
 		}
-		//strategy
-		{
-			if(this.whiteCheckersTable/(TOT_CHECKERS-this.whiteCheckersHand) > this.blackCheckersTable/(TOT_CHECKERS-this.blackCheckersHand))
-				index +=0.3*black;
-			else index -=0.3*black;
 
-			if(numberOfMills(EUGState.WHITE) > numberOfMills(EUGState.BLACK)) index+=0.4*black;
-			else index-=0.4*black;
+		short myCheckersTable = this.getCheckersTable(whoAmI);
+		short foeCheckersTable = this.getCheckersTable(this.notMe());
+		short myMills = this.numberOfMills(whoAmI);
+		short foeMills = this.numberOfMills(this.notMe());
+//		short myOpenCouples = this.numberOfOpenCouples(whoAmI);
+//		short foeOpenCouples = this.numberOfOpenCouples(this.notMe());
+		short myCouples = this.numberOfOpenCouples(whoAmI);
+		short foeCouples = this.numberOfOpenCouples(this.notMe());
+		short myDegree = this.degreesOfFreedom(whoAmI);
+		short foeDegree = this.degreesOfFreedom(this.notMe());
+		
+//		System.out.println(myDegree + " " + foeDegree);
+		switch(this.currentPhase){
+			case EUGState.PHASE1:
+				short myCheckersShouldTable = ((short)(TOT_CHECKERS - this.getCheckersHand(whoAmI)));
+				short foeCheckersShouldTable =((short)(TOT_CHECKERS - this.getCheckersHand(this.notMe())));
 
-			if(numberOfCouples(EUGState.WHITE) > numberOfCouples(EUGState.BLACK)) index+=0.17*black;
-			else index-=0.17*black;
+				if((myCheckersTable/myCheckersShouldTable) > (foeCheckersTable/foeCheckersShouldTable))
+					index +=30;
+				else index -=30;
 
+				index += myMills*20*(TOT_CHECKERS - this.getCheckersHand(whoAmI))/3;
+				index -= foeMills*25*(TOT_CHECKERS - this.getCheckersHand(this.notMe()))/3;
+				index += (myCouples-myMills)*150*(this.getCheckersHand(whoAmI)+1)/3;
+				index -= (foeCouples-foeMills)*180*(this.getCheckersHand(this.notMe())+1)/3;
+				//index += (myDegree-foeDegree-1)*(TOT_CHECKERS-this.getCheckersHand(whoAmI));
+				break;
+			case EUGState.PHASE2:
+			case EUGState.PHASE3:
+				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=35;
+				else index -=35;
+
+				index += myMills*25*TOT_CHECKERS/3;
+				index -= foeMills*30*TOT_CHECKERS/3;
+				index += (myCouples-myMills)*5/3;
+				index -= (foeCouples-foeMills)*6/3;
+				//index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(this.notMe())-this.getCheckersTable(whoAmI)));
+				break;
 		}
+
 		return index;
+	}
+
+	private short notMe(){
+		return (whoAmI == EUGState.WHITE) ? EUGState.BLACK : EUGState.WHITE;
 	}
 
 	private short numberOfMills(short color){
@@ -346,6 +371,20 @@ public class EUGState {
 		}
 		return mills;
 	}
+	
+	private short degreesOfFreedom(short color){
+		short degrees = 0;
+		for (short row = 0; row < EUGState.ROWS; row++) {
+			for (short col = 0; col < EUGState.COLUMNS; col++) {
+				if(board[row][col] != color) continue;
+				for(short[] neighbor : Hamburger.neighbors.get(row+","+col)){
+					if(board[neighbor[0]][neighbor[1]] == EUGState.EMPTY)
+						degrees++;
+				}
+			}
+		}
+		return degrees;
+	}
 
 	private short numberOfCouples(short color){
 		short couples=0,k=0;
@@ -357,6 +396,25 @@ public class EUGState {
 				couples++;
 		}
 		return couples;
+	}
+
+	private short numberOfOpenCouples(short color){
+		short couples=0;
+		for (short[][] mill : Hamburger.mills) {
+			if((this.board[mill[0][0]][mill[0][1]] == color && this.board[mill[1][0]][mill[1][1]] == color && this.board[mill[2][0]][mill[2][1]] == EUGState.EMPTY) ||
+					(this.board[mill[0][0]][mill[0][1]] == color && this.board[mill[1][0]][mill[1][1]] == EUGState.EMPTY && this.board[mill[2][0]][mill[2][1]] == color) ||
+					(this.board[mill[0][0]][mill[0][1]] == EUGState.EMPTY && this.board[mill[1][0]][mill[1][1]] == color && this.board[mill[2][0]][mill[2][1]] == color))
+				couples++;
+		}
+		return couples;
+	}
+
+	private short getCheckersTable(short color){
+		return (color == EUGState.WHITE) ? this.whiteCheckersTable : this.blackCheckersTable;
+	}
+
+	private short getCheckersHand(short color){
+		return (color == EUGState.WHITE) ? this.whiteCheckersHand : this.blackCheckersHand;
 	}
 
 	public short getPositionChecker(short row, short column) {
