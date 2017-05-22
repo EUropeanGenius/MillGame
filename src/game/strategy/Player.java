@@ -7,28 +7,16 @@ import game.rules.EUGame;
 import it.unibo.ai.didattica.mulino.domain.State;
 
 public class Player {
-//	private long ram; //bytes
-	//private Color color; //enum
 	private State.Checker color;
-	private long moveInterval; //millis
+	private int moveInterval;
 	private EUGClient client;
-//	private static long FACTOR = 1024*1024;
-	
-	public Player(State.Checker color, long moveInterval, long ram, EUGClient client) {
+
+	public Player(State.Checker color, int moveInterval, EUGClient client) {
 		super();
-//		this.ram = ram;
 		this.color = color;
 		this.moveInterval = moveInterval;
 		this.client = client;
 	}
-
-//	public long getRam() {
-//		return ram/FACTOR;
-//	}
-//
-//	public void setRam(long ram) {
-//		this.ram = ram*FACTOR;
-//	}
 
 	public State.Checker getColor() {
 		return color;
@@ -39,11 +27,11 @@ public class Player {
 	}
 
 	public long getMoveInterval() {
-		return moveInterval/1000;
+		return moveInterval;
 	}
 
-	public void setMoveInterval(long moveInterval) {
-		this.moveInterval = moveInterval*1000;
+	public void setMoveInterval(int moveInterval) {
+		this.moveInterval = moveInterval;
 	}
 
 	@Override
@@ -53,7 +41,6 @@ public class Player {
 		sb.append("[\n");
 		sb.append("\tColor : "+ this.getColor().toString()+"\n");
 		sb.append("\tTime (s): "+ this.getMoveInterval()+"\n");
-//		sb.append("\tRam (MB): "+ this.getRam()+"\n");
 		sb.append("]\n");
 		return sb.toString();
 	}
@@ -104,7 +91,7 @@ public class Player {
 	private String computeMove(EUGState state) {
 		EUGame game = new EUGame(state);
 		EUGState currState = game.getInitialState();
-		EUGHeuristic<EUGState, EUGAction, Short> search = EUGHeuristic.createFor(game,-30000,30000,58);
+		EUGHeuristic<EUGState, EUGAction, Short> search = EUGHeuristic.createFor(game,-30000,3000,this.moveInterval-2);
 		search.setLogEnabled(true);
 		return search.makeDecision(currState).toString();
 	}
@@ -115,7 +102,6 @@ public class Player {
 		int result = 1;
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + (int) (moveInterval ^ (moveInterval >>> 32));
-//		result = prime * result + (int) (ram ^ (ram >>> 32));
 		return result;
 	}
 
@@ -132,8 +118,7 @@ public class Player {
 			return false;
 		if (moveInterval != other.moveInterval)
 			return false;
-//		if (ram != other.ram)
-//			return false;
+
 		return true;
 	}
 	 

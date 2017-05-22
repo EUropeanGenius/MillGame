@@ -6,19 +6,14 @@ import it.unibo.ai.didattica.mulino.domain.State;
 
 public class Launcher {
 
-	static int DEFAULT_RAM_MB = 2 * 1024;
 	static int DEFAULT_TIME_SEC = 60;
 
 	public static void main(String[] args) {
 		State.Checker col = State.Checker.EMPTY;
 		int moveTimeSec = DEFAULT_TIME_SEC;
-		int ramMb = DEFAULT_RAM_MB;
 
 		// process args
 		switch (args.length) {
-		case 3: // memory
-			ramMb = Integer.parseInt(args[2]);
-
 		case 2: // time
 			moveTimeSec = Integer.parseInt(args[1]);
 
@@ -40,7 +35,7 @@ public class Launcher {
 		}catch(Exception e){
 			System.exit(1);
 		}
-		Player p = new Player(col, moveTimeSec * 1000, ramMb * 1024 * 1024, client);
+		Player p = new Player(col, moveTimeSec, client);
 		p.start();
 		
 	}
@@ -48,9 +43,8 @@ public class Launcher {
 	public static void usage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Usage error\n");
-		sb.append("java -jar w|b [time] [memMax]\n");
+		sb.append("java -jar w|b [time]\n");
 		sb.append("[time] -> answering time interval in seconds\n");
-		sb.append("[memMax] -> max size of memory available in MB\n");
 		System.out.println(sb.toString());
 	}
 
