@@ -320,12 +320,11 @@ public class EUGState {
 		short foeMills = this.numberOfMills(this.notMe());
 //		short myOpenCouples = this.numberOfOpenCouples(whoAmI);
 //		short foeOpenCouples = this.numberOfOpenCouples(this.notMe());
-		short myCouples = this.numberOfOpenCouples(whoAmI);
-		short foeCouples = this.numberOfOpenCouples(this.notMe());
+		short myCouples = this.numberOfCouples(whoAmI);
+		short foeCouples = this.numberOfCouples(this.notMe());
 		short myDegree = this.degreesOfFreedom(whoAmI);
 		short foeDegree = this.degreesOfFreedom(this.notMe());
 		
-//		System.out.println(myDegree + " " + foeDegree);
 		switch(this.currentPhase){
 			case EUGState.PHASE1:
 				short myCheckersShouldTable = ((short)(TOT_CHECKERS - this.getCheckersHand(whoAmI)));
@@ -350,7 +349,7 @@ public class EUGState {
 				index -= foeMills*30*TOT_CHECKERS/3;
 				index += (myCouples-myMills)*5/3;
 				index -= (foeCouples-foeMills)*6/3;
-				index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(this.notMe())-this.getCheckersTable(whoAmI)));
+				index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(whoAmI)-this.getCheckersTable(this.notMe())));
 				break;
 		}
 
@@ -405,6 +404,40 @@ public class EUGState {
 					(this.board[mill[0][0]][mill[0][1]] == color && this.board[mill[1][0]][mill[1][1]] == EUGState.EMPTY && this.board[mill[2][0]][mill[2][1]] == color) ||
 					(this.board[mill[0][0]][mill[0][1]] == EUGState.EMPTY && this.board[mill[1][0]][mill[1][1]] == color && this.board[mill[2][0]][mill[2][1]] == color))
 				couples++;
+		}
+		return couples;
+	}
+
+	private short numberOfWannabeMill(short color){
+		short couples=0;
+		for (short[][] mill : Hamburger.mills) {
+			if((this.board[mill[0][0]][mill[0][1]] == color && this.board[mill[1][0]][mill[1][1]] == color && this.board[mill[2][0]][mill[2][1]] == EUGState.EMPTY)){
+				List<short[]> neighbors = Hamburger.neighbors.get(mill[2][0]+","+mill[2][1]);
+				for(short[] neigh : neighbors){
+					if(neigh[0] != mill[0][0] && neigh[1] != mill[0][1] && neigh[0] != mill[1][0] && neigh[1] != mill[1][1]) {
+						if(board[neigh[0]][neigh[1]] == color)
+							couples++;
+					}
+				}
+			}
+			else if(this.board[mill[0][0]][mill[0][1]] == color && this.board[mill[1][0]][mill[1][1]] == EUGState.EMPTY && this.board[mill[2][0]][mill[2][1]] == color){
+				List<short[]> neighbors = Hamburger.neighbors.get(mill[1][0]+","+mill[1][1]);
+				for(short[] neigh : neighbors){
+					if(neigh[0] != mill[0][0] && neigh[1] != mill[0][1] && neigh[0] != mill[2][0] && neigh[1] != mill[2][1]) {
+						if(board[neigh[0]][neigh[1]] == color)
+							couples++;
+					}
+				}
+			}
+			else if(this.board[mill[0][0]][mill[0][1]] == EUGState.EMPTY && this.board[mill[1][0]][mill[1][1]] == color && this.board[mill[2][0]][mill[2][1]] == color){
+				List<short[]> neighbors = Hamburger.neighbors.get(mill[0][0]+","+mill[0][1]);
+				for(short[] neigh : neighbors){
+					if(neigh[0] != mill[2][0] && neigh[1] != mill[2][1] && neigh[0] != mill[1][0] && neigh[1] != mill[1][1]) {
+						if(board[neigh[0]][neigh[1]] == color)
+							couples++;
+					}
+				}
+			}
 		}
 		return couples;
 	}
