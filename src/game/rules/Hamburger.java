@@ -230,7 +230,7 @@ public class Hamburger {
             put("6,2", new ArrayList<short[][]>() {
                 {
                     add(new short[][] { {4,2},{5,2} });
-                    add(new short[][] { {7,2},{6,2} });
+                    add(new short[][] { {7,2},{0,2} });
                 }
             });
             put("7,2", new ArrayList<short[][]>() {
