@@ -1,0 +1,5 @@
+Usage: java -jar EUropeanGenius.jar {Black|White} [seconds]
+
+seconds: max time before choosing the move.
+
+JRE 1.8 (just to be sure)

@@ -18,7 +18,7 @@ public class Launcher {
 			moveTimeSec = Integer.parseInt(args[1]);
 
 		case 1: // color
-			col = (args[0].equals("w")) ? State.Checker.WHITE : ((args[0].equals("b")) ? State.Checker.BLACK : null);
+			col = (args[0].equals("White")) ? State.Checker.WHITE : ((args[0].equals("Black")) ? State.Checker.BLACK : null);
 			if (col == null) {
 				usage();
 				System.exit(-1);
