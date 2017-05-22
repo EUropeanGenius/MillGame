@@ -341,7 +341,6 @@ public class EUGState {
 				index += (myDegree-foeDegree-1)*(TOT_CHECKERS-this.getCheckersHand(whoAmI));
 				break;
 			case EUGState.PHASE2:
-			case EUGState.PHASE3:
 				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe()))	index +=35;
 				else index -=35;
 
@@ -350,6 +349,25 @@ public class EUGState {
 				index += (myCouples-myMills)*5/3;
 				index -= (foeCouples-foeMills)*6/3;
 				index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(whoAmI)-this.getCheckersTable(this.notMe())));
+				break;
+			case EUGState.PHASE3:
+				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe())){ //loro ne hanno 3 e noi di piu -> POMPARE MULINI
+					index += myMills*290;
+					index -= foeMills*90;
+					index += (myCouples-myMills);
+					index -= (foeCouples-foeMills)*2;
+					
+				}else{ //noi ne abbiamo 3 e loro possono averne o 3 o di piu -> BLOCCARLO O STATO RIPETUTO
+					index += myMills*75;
+					index -= foeMills*290;
+					index += (myCouples-myMills);
+					index -= (foeCouples-foeMills)*2;
+					
+				}
+
+
+		
+				
 				break;
 		}
 
