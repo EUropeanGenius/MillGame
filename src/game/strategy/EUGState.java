@@ -320,8 +320,8 @@ public class EUGState {
 		short foeMills = this.numberOfMills(this.notMe());
 //		short myOpenCouples = this.numberOfOpenCouples(whoAmI);
 //		short foeOpenCouples = this.numberOfOpenCouples(this.notMe());
-		short myCouples = this.numberOfCouples(whoAmI);
-		short foeCouples = this.numberOfCouples(this.notMe());
+		short myCouples = this.numberOfOpenCouples(whoAmI);
+		short foeCouples = this.numberOfOpenCouples(this.notMe());
 		short myDegree = this.degreesOfFreedom(whoAmI);
 		short foeDegree = this.degreesOfFreedom(this.notMe());
 		
