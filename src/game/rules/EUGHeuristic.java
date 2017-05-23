@@ -32,6 +32,8 @@ import java.util.List;
     }
 }*/
 
+/* This code is taken from aima.core.search.adversarial.IterativeDeepeningAlphaBetaSearch */
+
 public class EUGHeuristic<STATE, ACTION, PLAYER> implements AdversarialSearch<STATE, ACTION> {
     public static final String METRICS_NODES_EXPANDED = "nodesExpanded";
     public static final String METRICS_MAX_DEPTH = "maxDepth";
@@ -89,7 +91,7 @@ public class EUGHeuristic<STATE, ACTION, PLAYER> implements AdversarialSearch<ST
                 }
             }
 
-            if(newResults.size() == results.size()) {
+            if(newResults.size() == results.size()) { //volevamo modificare questa riga
                 results = newResults.actions;
                 if(this.logEnabled) {
                     System.out.println(logText);

@@ -1,5 +1,5 @@
 Usage: java -jar EUropeanGenius.jar {Black|White} [seconds]
 
-seconds: secondi  time-out
+seconds: secondi time-out
 
 Soluzione implementata in Java JRE 1.8 utilizzando la libreria aima-core.jar (non necessaria per eseguire).

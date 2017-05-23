@@ -318,8 +318,6 @@ public class EUGState {
 		short foeCheckersTable = this.getCheckersTable(this.notMe());
 		short myMills = this.numberOfMills(whoAmI);
 		short foeMills = this.numberOfMills(this.notMe());
-//		short myOpenCouples = this.numberOfOpenCouples(whoAmI);
-//		short foeOpenCouples = this.numberOfOpenCouples(this.notMe());
 		short myCouples = this.numberOfOpenCouples(whoAmI);
 		short foeCouples = this.numberOfOpenCouples(this.notMe());
 		short myDegree = this.degreesOfFreedom(whoAmI);
@@ -351,7 +349,7 @@ public class EUGState {
 				index += (myDegree-foeDegree-1)*(TOT_CHECKERS-(this.getCheckersTable(whoAmI)-this.getCheckersTable(this.notMe())));
 				break;
 			case EUGState.PHASE3:
-				if(this.getCheckersTable(whoAmI) > this.getCheckersTable(this.notMe())){ //loro ne hanno 3 e noi di piu -> POMPARE MULINI
+				if(this.getCheckersTable(whoAmI) >= this.getCheckersTable(this.notMe())){ //loro ne hanno 3 e noi di piu
 					index += myMills*290;
 					index -= foeMills*90;
 					index += (myCouples-myMills);
@@ -364,10 +362,6 @@ public class EUGState {
 					index -= (foeCouples-foeMills)*2;
 					
 				}
-
-
-
-				
 				break;
 		}
 
