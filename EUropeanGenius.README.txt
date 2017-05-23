@@ -1,5 +1,5 @@
 Usage: java -jar EUropeanGenius.jar {Black|White} [seconds]
 
-seconds: max time before choosing the move.
+seconds: secondi  time-out
 
-JRE 1.8 (just to be sure)
+Soluzione implementata in Java JRE 1.8 utilizzando la libreria aima-core.jar (non necessaria per eseguire).

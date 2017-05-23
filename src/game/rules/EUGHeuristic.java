@@ -129,7 +129,7 @@ public class EUGHeuristic<STATE, ACTION, PLAYER> implements AdversarialSearch<ST
     public double minValue(STATE state, PLAYER player, double alpha, double beta, int depth) {
         this.updateMetrics(depth);
         if(!this.game.isTerminal(state) && depth < this.currDepthLimit && !this.timer.timeOutOccured()) {
-            double value = 1.0D / 0.0;
+            double value = Double.POSITIVE_INFINITY;
 
             for (ACTION action : orderActions(state, game.getActions(state), player, depth)) {
                 value = Math.min(value, this.maxValue(this.game.getResult(state, action), player, alpha, beta, depth + 1));

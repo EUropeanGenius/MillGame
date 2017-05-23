@@ -92,7 +92,7 @@ public class Player {
 		EUGame game = new EUGame(state);
 		EUGState currState = game.getInitialState();
 		EUGHeuristic<EUGState, EUGAction, Short> search = EUGHeuristic.createFor(game,-30000,3000,this.moveInterval-2);
-		search.setLogEnabled(true);
+		//search.setLogEnabled(true);
 		return search.makeDecision(currState).toString();
 	}
 
