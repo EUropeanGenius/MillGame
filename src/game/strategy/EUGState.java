@@ -324,7 +324,7 @@ public class EUGState {
 		short foeCouples = this.numberOfOpenCouples(this.notMe());
 		short myDegree = this.degreesOfFreedom(whoAmI);
 		short foeDegree = this.degreesOfFreedom(this.notMe());
-		
+
 		switch(this.currentPhase){
 			case EUGState.PHASE1:
 				short myCheckersShouldTable = ((short)(TOT_CHECKERS - this.getCheckersHand(whoAmI)));
@@ -366,7 +366,7 @@ public class EUGState {
 				}
 
 
-		
+
 				
 				break;
 		}
