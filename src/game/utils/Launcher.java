@@ -43,8 +43,8 @@ public class Launcher {
 	public static void usage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Usage error\n");
-		sb.append("java -jar w|b [time]\n");
-		sb.append("[time] -> answering time interval in seconds\n");
+		sb.append("java -jar EUropeanGenius.jar White|Black [timeout]\n");
+		sb.append("[timeout] -> answering time interval in seconds\n");
 		System.out.println(sb.toString());
 	}
 
